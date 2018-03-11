@@ -1,46 +1,44 @@
-//
-// Created by zhu on 2018/3/10.
-//
-
-
-#include <iostream>
-
-#include <algorithm>
-#include <cstring>
+#include<cstdio>
+#include<cmath>
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+#include<string.h>
+#include<stdlib.h>
+#include<queue>
 
 using namespace std;
 
-const int MAX = 100000;
-
-struct Pie {
-    int pos;
-    int time;
-};
-
-int dp[12][MAX]; //dp[i][j] 第j秒在i的位置上时最多能接到的馅饼数
-// dp[i][j]= max(dp[i][j-1]+sum(dat[位置在i-1到i+1时间在j的数量],dp[
-int dat[12][MAX];
 
 int main() {
+    int a;
+    int dp[100005][15];
+    int time, pos;
     int n;
-    while (scanf("%d", &n) != EOF && n != 0) {
-        int pos, time;
-        memset(dat, 0, sizeof(dat));
+
+    while (scanf("%d", &n) == 1 && n) {
+        int endTime = 0;
         memset(dp, 0, sizeof(dp));
-        for (int i = 0; i < n; i++) {
+        for (int i = 1; i <= n; i++) {
             scanf("%d %d", &pos, &time);
-            dat[pos][time]++;
-        }
-        for (int j = 0; j < n; j++) {
-            for (int i = 0; i < 12; i++) {
-                dp[i][j] =
-                        max(dp[i - 1][j - 1],
-                            max(dp[i][j - 1],
-                                dp[i + 1][j - 1]))
-                        + dat[i][j] + dat[i - 1][j] + dat[i + 1][j];
+            dp[time][pos]++;
+            if (time > endTime) {
+                endTime = time;
             }
         }
+        for (int i = endTime - 1; i >= 0; i--) {
+            dp[i][0] += max(dp[i + 1][1], dp[i + 1][0]);
+            for (int j = 1; j <= 10; j++) {
+//                int temp = 0;
+//                temp = max(dp[i + 1][j], dp[i + 1][j + 1]);
+//                temp = max(dp[i + 1][j - 1], temp);
+//                dp[i][j] += temp;
+                dp[i][j] += max(dp[i + 1][j],
+                                max(dp[i + 1][j + 1],
+                                    dp[i + 1][j - 1]));
+            }
+        }
+        printf("%d\n", dp[0][5]);
     }
-
     return 0;
 }
