@@ -1,44 +1,91 @@
-//
-// Created by zhu on 2018/3/23.
-//
-#include <iostream>
-#include <string>
-#include <algorithm>
+/*
+ * 现存在一个XYZ不超过30的立体迷宫，S为入口,E为出口，.为路，#不可通过
+ * 求最短的步数走到出口
+ * */
+
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<queue>
+#include<algorithm>
 
 using namespace std;
 
-void dfs(void);
-
-struct Point {
-    Point(int x0, int y0, int z0) : x(x0), y(y0), z(z0) {}
-
-    int x;
-    int y;
-    int z;
-
+char map[35][35][35];
+int vis[35][35][35];
+int k, n, m, sx, sy, sz, ex, ey, ez;
+int dx[6] = {-1, 1, 0, 0, 0, 0};
+int dy[6] = {0, 0, -1, 1, 0, 0};
+int dz[6] = {0, 0, 0, 0, 1, -1};
+struct node {
+    int x, y, z, step;
 };
 
+int check(int x, int y, int z) {
+    if (x < 0 || y < 0 || z < 0 || x >= k || y >= n || z >= m || map[x][y][z] == '#' ||
+        vis[x][y][z]) {
+        return 1;
+    }
+    return 0;
+}
 
-int space[10][10][10];
-int X, Y, Z;
+int bfs() {
+    node a, next;
+    queue<node> Q;
+    a.x = sx;
+    a.y = sy;
+    a.z = sz;
+    a.step = 0;
+    vis[sx][sy][sz] = 1;
+    Q.push(a);
+    while (!Q.empty()) {
+        a = Q.front();
+        Q.pop();
+        if (a.x == ex && a.y == ey && a.z == ez) {
+            return a.step;
+        }
+        for (int i = 0; i < 6; ++i) {
+            next = a;
+            next.x = a.x + dx[i];
+            next.y = a.y + dy[i];
+            next.z = a.z + dz[i];
+            if (check(next.x, next.y, next.z)) {
+                continue;
+            }
+            vis[next.x][next.y][next.z] = 1;
+            next.step = a.step + 1;
+            Q.push(next);
+        }
+    }
+    return 0;
+}
 
 int main() {
-    while (cin >> Z >> X >> Y && !(X == 0 && Y == 0 && Z == 0)) {
-        cin.get();
-        for (int k = 0; k < Z; k++) {
-            for (int i = 0; i < X; i++) {
-                string tem;
-                cin >> tem;
-                for (int j = 0; j < Y; j++) {
-                    space[i][j][k] = tem[j];
+    while (scanf("%d%d%d", &k, &n, &m), n + m + k) {
+        for (int i = 0; i < k; ++i) {
+            for (int j = 0; j < n; ++j) {
+                scanf("%s", map[i][j]);
+                for (int r = 0; r < m; ++r) {
+                    if (map[i][j][r] == 'S') {
+                        sx = i;
+                        sy = j;
+                        sz = r;
+                    } else if (map[i][j][r] == 'E') {
+                        ex = i;
+                        ey = j;
+                        ez = r;
+                    }
                 }
             }
         }
+        memset(vis, 0, sizeof(vis));
+        int ans;
+        ans = bfs();
+        if (ans) {
+            printf("Escaped in %d minute(s).\n", ans);
+        } else {
+            printf("Trapped!\n");
+        }
     }
+    return 0;
 }
-
-void dfs(Point curPlace) {
-    if ()
-}
-
-
