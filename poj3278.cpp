@@ -1,6 +1,62 @@
+#include<iostream>
+#include<cstdio>
+#include<queue>
+#include<cstring>
+// 完全不明白我写的为什么不对
+using namespace std;
+
+int visit[100005] = {0};
+
+int main() {
+    int n, m;
+    while (scanf("%d%d", &n, &m) != EOF) {
+        memset(visit, 0, sizeof(visit));
+        queue<int> q;
+        q.push(n);
+        int t;
+        while (!q.empty()) {
+            t = q.front();
+            q.pop();
+            if (t == m) {
+                break;
+            }
+            if (t > 0 && !visit[t - 1]) {
+                int z;
+                z = t - 1;
+                visit[z] = visit[t] + 1;
+                q.push(z);
+            }
+            if (t < m && !visit[t + 1]) {
+                int z;
+                z = t + 1;
+                visit[z] = visit[t] + 1;
+                q.push(z);
+            }
+            if (t * 2 < 100005 && !visit[t * 2]) {
+                int z;
+                z = t * 2;
+                visit[z] = visit[t] + 1;
+                q.push(z);
+            }
+        }
+        printf("%d\n", visit[m]);
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+/*
 //
 // Created by zhu on 2018/3/24.
 //
+
 
 #include <iostream>
 #include <fstream>
@@ -9,7 +65,7 @@
 #include <cstring>
 
 using namespace std;
-
+const int Nmax = 100005;
 struct Node {
     int pos;
     int time;
@@ -18,7 +74,7 @@ struct Node {
 
 int N, K;
 Node cur;
-queue<Node> queue1;
+queue<Node> que;
 int vis[100000];
 
 void bfs();
@@ -26,17 +82,18 @@ void bfs();
 int main() {//todo
 //    fstream fis("data.dat");
     while (cin >> N >> K) {
-        memset(vis, 0, sizeof(vis));
         if (N >= K) {
             cout << N - K << endl;
             continue;
         }
-        while (!queue1.empty()) {
-            queue1.pop();
+        memset(vis, 0, sizeof(vis));
+        while (!que.empty()) {
+            que.pop();
         }
         cur.pos = N;
         cur.time = 0;
-        queue1.push(cur);
+        que.push(cur);
+        vis[cur.pos] = 1;
         bfs();
         cout << cur.time << endl;
     }
@@ -45,9 +102,9 @@ int main() {//todo
 
 
 void bfs() {
-    while (!queue1.empty()) {
-        cur = queue1.front();
-        queue1.pop();
+    while (!que.empty()) {
+        cur = que.front();
+        que.pop();
         if (cur.pos == K) {
             break;
         }
@@ -61,9 +118,9 @@ void bfs() {
             } else if (i == 2) {
                 next.pos = cur.pos - 1;
             }
-            if (vis[next.pos] == 0 && next.pos >= 0 && next.pos <= 100000) {
+            if (next.pos >= 0 && next.pos <= 100000 && vis[next.pos] == 0) {
                 vis[next.pos] = 1;
-                queue1.push(next);
+                que.push(next);
             }
         }
     }
@@ -101,3 +158,4 @@ void bfs() {
 
 
 
+*/
