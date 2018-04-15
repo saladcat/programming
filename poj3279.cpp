@@ -1,6 +1,6 @@
 //
 // Created by zhu on 2018/3/25.
-//
+//不知道为什么WA TODO
 /*  https://blog.csdn.net/STILLxjy/article/details/52155213
     题目大意：有一个 M * N 的格子，每个格子可以翻转正反面，它们有一面是黑色，另一面是白色。黑色翻转之后变成白色
     ，白色翻转之后则变成黑色。
@@ -34,12 +34,12 @@
 
 using namespace std;
 int M, N;
-const int maxMN = 16;
+const int maxMN = 17;
 int board[maxMN][maxMN];
 int curStateBoard[maxMN][maxMN];
 int res[maxMN][maxMN];
 int opt[maxMN][maxMN];
-int optCnt = 99999;
+int optCnt = 0xffffff;
 int dx[4] = {-1, 0, 1, 0};
 int dy[4] = {0, -1, 0, 1};
 
@@ -48,13 +48,14 @@ void reverse(int i, int j);
 void step(int i, int j);
 
 int main() {
-    fstream is("data.dat");
-    while (is >> M >> N) {
+//    fstream is("data.dat");
+    while (cin >> M >> N) {
         memset(board, 0, sizeof(board));
-        memset(res, 0, sizeof(res));
+        memset(opt, 0, sizeof(opt));
+        optCnt = 0xffffff;
         for (int i = 0; i < M; i++) {
             for (int j = 0; j < N; j++) {
-                is >> board[i][j];
+                cin >> board[i][j];
             }
         }
         for (int state = 0; state < (1 << N); state++) {
@@ -80,7 +81,7 @@ int main() {
                 }
             }
             int sum = 0;
-            for (int cols = 0; cols < M; cols++) {
+            for (int cols = 0; cols < N; cols++) {
                 sum += curStateBoard[N - 1][cols];
             }
 
@@ -89,15 +90,17 @@ int main() {
                     optCnt = cnt;
                     memcpy(opt, res, sizeof(opt));
                 }
-            } else {
-                cout << "IMPOSSIBLE" << endl;
             }
         }
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                cout << opt[i][j] << " ";
+        if (optCnt == 0xffffff) {
+            cout << "IMPOSSIBLE" << endl;
+        } else {
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < M; j++) {
+                    cout << opt[i][j] << " ";
+                }
+                cout << endl;
             }
-            cout << endl;
         }
     }
     return 0;

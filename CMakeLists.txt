@@ -3,5 +3,5 @@ project(Programing)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES poj3279.cpp)
+set(SOURCE_FILES poj3126.cpp POJ3414.cpp)
 add_executable(Programing ${SOURCE_FILES})
