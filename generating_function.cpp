@@ -33,6 +33,7 @@ int main() {
                     c2[j + k] += c1[j];
                 }
             }
+
             for (int j = 0; j <= n; j++) {
                 c1[j] = c2[j];
                 c2[j] = 0;
