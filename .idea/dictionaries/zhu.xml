@@ -2,6 +2,8 @@
   <dictionary name="zhu">
     <words>
       <w>lmax</w>
+      <w>subaray</w>
+      <w>subarray</w>
     </words>
   </dictionary>
 </component>
