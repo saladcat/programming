@@ -1,6 +1,6 @@
 //
 // Created by zhu on 2018/3/25.
-//不知道为什么WA TODO
+//
 /*  https://blog.csdn.net/STILLxjy/article/details/52155213
     题目大意：有一个 M * N 的格子，每个格子可以翻转正反面，它们有一面是黑色，另一面是白色。黑色翻转之后变成白色
     ，白色翻转之后则变成黑色。
@@ -33,104 +33,100 @@
 #include <queue>
 
 using namespace std;
+
+int matrix[15][15];
+int curMatrix[15][15];
+int stepMatrix[15][15];
+int stepCnt = 0;
+int minStepCnt = 99999;
+int minStepMatrix[15][15];
 int M, N;
-const int maxMN = 17;
-int board[maxMN][maxMN];
-int curStateBoard[maxMN][maxMN];
-int res[maxMN][maxMN];
-int opt[maxMN][maxMN];
-int optCnt = 0xffffff;
-int dx[4] = {-1, 0, 1, 0};
-int dy[4] = {0, -1, 0, 1};
 
-void reverse(int i, int j);
-
-void step(int i, int j);
-
-int main() {
-//    fstream is("data.dat");
-    while (cin >> M >> N) {
-        memset(board, 0, sizeof(board));
-        memset(opt, 0, sizeof(opt));
-        optCnt = 0xffffff;
-        for (int i = 0; i < M; i++) {
-            for (int j = 0; j < N; j++) {
-                cin >> board[i][j];
-            }
+void init() {
+    cin >> M >> N;
+    for (int i = 0; i < M; i++) {
+        for (int j = 0; j < N; j++) {
+            cin >> matrix[i][j];
+//            cout << matrix[i][j] << " ";
         }
-        for (int state = 0; state < (1 << N); state++) {
-            int cnt = 0;
-            memset(res, 0, sizeof(res));
-            memcpy(curStateBoard, board, sizeof(curStateBoard));
-            for (int cols = 0; cols < N; cols++) {
-                int tem = state >> cols;
-                tem = tem & 1;
-                if (tem == 1) {
-                    step(0, cols);
-                    cnt++;
-                    res[0][cols] = 1;
-                }
-            }
-            for (int i = 1; i < M; i++) {
-                for (int j = 0; j < N; j++) {
-                    if (curStateBoard[i - 1][j] == 1) {
-                        step(i, j);
-                        cnt++;
-                        res[i][j] = 1;
-                    }
-                }
-            }
-            int sum = 0;
-            for (int cols = 0; cols < N; cols++) {
-                sum += curStateBoard[N - 1][cols];
-            }
-
-            if (sum == 0) {
-                if (cnt < optCnt) {
-                    optCnt = cnt;
-                    memcpy(opt, res, sizeof(opt));
-                }
-            }
-        }
-        if (optCnt == 0xffffff) {
-            cout << "IMPOSSIBLE" << endl;
-        } else {
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < M; j++) {
-                    cout << opt[i][j] << " ";
-                }
-                cout << endl;
-            }
-        }
+//        cout << endl;
     }
-    return 0;
+
 }
 
-
-void reverse(int i, int j) {
-    if (i < 0 || j < 0 || i >= M || j >= N) {
+void turn(int i, int j) {
+    if (i < 0 || i >= M ||
+        j < 0 || j >= N) {
+        return;
     } else {
-        curStateBoard[i][j] = curStateBoard[i][j] == 1 ? 0 : 1;
+        curMatrix[i][j] = (curMatrix[i][j] == 0) ? 1 : 0;
     }
-
 }
 
 void step(int i, int j) {
-    reverse(i, j);
-    for (int index = 0; index < 4; index++) {
-        reverse(i + dx[index], j + dy[index]);
-    }
+    stepCnt++;
+    stepMatrix[i][j] = 1;
+    turn(i, j);
+    turn(i - 1, j);
+    turn(i, j - 1);
+    turn(i, j + 1);
+    turn(i + 1, j);
 }
 
 
+void solve() {
+    int comp = 0;
+    for (comp = 0; comp < 1 << N; comp++) {//状态压缩
+        bool isPossible = true;
+        memcpy(curMatrix, matrix, sizeof(matrix));
+        memset(stepMatrix, 0, sizeof(stepMatrix));
+        stepCnt = 0;
+        int tempCode = comp;
+        for (int i = N - 1; i >= 0; --i) {
+            int isStep = tempCode % 2;
+            tempCode = tempCode / 2;
+            if (isStep == 1) {
+                step(0, i);
+            }
+        }//针对第一行不同的状态进行后续操作
 
+        for (int i = 1; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (curMatrix[i - 1][j] == 1) {
+                    step(i, j);
+                }
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            if (curMatrix[M - 1][i] == 1) {
+                isPossible = false;
+            }
+        }
 
+        if (isPossible) {
+            if (stepCnt < minStepCnt) {
+                memcpy(minStepMatrix, stepMatrix, sizeof(stepMatrix));
+                minStepCnt = stepCnt;
+            }
+        }
+    }
+}
 
-
-
-
-
-
-
-
-
+int main(void) {
+    init();
+    solve();
+    if (minStepCnt < 9999) {
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                cout << minStepMatrix[i][j];
+                if (j != N - 1) {
+                    cout << " ";
+                }
+            }
+            cout << endl;
+        }
+    } else {
+        cout << "IMPOSSIBLE" << endl;
+    }
+    return 0;
+}
