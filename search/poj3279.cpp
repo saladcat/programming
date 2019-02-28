@@ -34,11 +34,11 @@
 
 using namespace std;
 
-int matrix[15][15];
-int curMatrix[15][15];
-int stepMatrix[15][15];
-int stepCnt = 0;
-int minStepCnt = 99999;
+int matrix[15][15]; //表示每个点初识状态
+int curMatrix[15][15]; //表示每个点的状态
+int stepMatrix[15][15]; //标记每个点是否踩过
+int stepCnt = 0; //踩过的次数
+int minStepCnt = 99999; //所有情况中踩过次数最小的
 int minStepMatrix[15][15];
 int M, N;
 
@@ -92,19 +92,19 @@ void solve() {
 
         for (int i = 1; i < M; i++) {
             for (int j = 0; j < N; j++) {
-                if (curMatrix[i - 1][j] == 1) {
+                if (curMatrix[i - 1][j] == 1) {//观察上方的点是否为0
                     step(i, j);
                 }
             }
         }
         for (int i = 0; i < N; i++) {
-            if (curMatrix[M - 1][i] == 1) {
+            if (curMatrix[M - 1][i] == 1) {//观察最后一行，能否翻过来
                 isPossible = false;
             }
         }
 
         if (isPossible) {
-            if (stepCnt < minStepCnt) {
+            if (stepCnt < minStepCnt) {//是否为最小的
                 memcpy(minStepMatrix, stepMatrix, sizeof(stepMatrix));
                 minStepCnt = stepCnt;
             }
