@@ -3,5 +3,5 @@ project(Programing)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES short_path/poj1062.cpp)
+set(SOURCE_FILES  min-spanning-tree/poj1251.cpp)
 add_executable(Programing ${SOURCE_FILES})
