@@ -3,5 +3,5 @@ project(Programing)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES  wangyi-bishi/4.cpp dp/hdoj1024.cpp)
+set(SOURCE_FILES short_path/poj3255.cpp)
 add_executable(Programing ${SOURCE_FILES})
