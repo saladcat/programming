@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.14)
 project(Programing)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES short_path/poj3255.cpp)
+set(SOURCE_FILES 推免复习/poj3414.cpp)
 add_executable(Programing ${SOURCE_FILES})
